@@ -1,0 +1,36 @@
+# Logs
+*.log
+error_log
+
+# Database backups
+*.sql
+backup_*.sql
+
+# Uploads (opcional - você pode remover se quiser incluir as imagens)
+uploads/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# PHP temporary files
+*.php~
+
+# Configuration files with sensitive data (opcional)
+# config.php
+# db_config.php 
