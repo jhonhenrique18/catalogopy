@@ -1304,6 +1304,14 @@ $total_pages = ceil($total_products / $items_per_page);
                 // Reinicializar lazy loading para as novas imagens
                 initLazyLoading();
                 
+                // ⚡ CORREÇÃO CRÍTICA: Aplicar event listeners aos novos botões
+                if (typeof setupAddToCartButtons === 'function') {
+                    setupAddToCartButtons();
+                    console.log('🛒 Event listeners aplicados aos novos botões');
+                } else {
+                    console.warn('⚠️ setupAddToCartButtons não encontrada');
+                }
+                
                 console.log(`✅ ${products.length} produtos adicionados ao grid`);
             }
             
