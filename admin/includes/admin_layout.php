@@ -410,6 +410,12 @@ if (isset($custom_page_title)) {
             <div class="nav-section">
                 <div class="nav-section-title">Sistema</div>
                 <div class="nav-item">
+                    <a href="webhooks.php" class="nav-link <?php echo $current_page === 'webhooks.php' ? 'active' : ''; ?>">
+                        <span class="nav-icon"><i class="fas fa-link"></i></span>
+                        <span class="nav-text">Webhooks & Automação</span>
+                    </a>
+                </div>
+                <div class="nav-item">
                     <a href="configuracoes.php" class="nav-link <?php echo $current_page === 'configuracoes.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-cog"></i></span>
                         <span class="nav-text">ConfiguraÃ§Ãµes</span>

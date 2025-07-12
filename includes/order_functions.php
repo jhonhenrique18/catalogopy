@@ -89,6 +89,15 @@ function saveOrder($orderData, $conn) {
         // Confirmar transação
         $conn->commit();
         
+        // ⚡ INTEGRAÇÃO WEBHOOK - Enviar automação após pedido confirmado
+        try {
+            require_once 'webhook_functions.php';
+            sendOrderWebhook($orderId, $conn);
+        } catch (Exception $webhook_error) {
+            // Log do erro mas não falha o pedido
+            error_log("Erro ao enviar webhook para pedido {$orderId}: " . $webhook_error->getMessage());
+        }
+        
         return $orderId;
         
     } catch (Exception $e) {
