@@ -1,5 +1,5 @@
 ﻿<?php
-// Obter configuraÃ§Ãµes da loja se nÃ£o foram carregadas
+// Obter configurações da loja se não foram carregadas
 if (!isset($store)) {
     require_once '../includes/db_connect.php';
     require_once '../includes/functions.php';
@@ -9,35 +9,35 @@ if (!isset($store)) {
     $store = $store_result->fetch_assoc();
 }
 
-// Detectar pÃ¡gina atual para menu ativo
+// Detectar página atual para menu ativo
 $current_page = basename($_SERVER['PHP_SELF']);
 $page_title = 'Painel Administrativo';
 
-// Definir tÃ­tulos das pÃ¡ginas
+// Definir títulos das páginas
 $page_titles = [
     'dashboard.php' => 'Dashboard',
-    'produtos.php' => 'GestÃ£o de Produtos',
+    'produtos.php' => 'Gestão de Produtos',
     'produto_adicionar.php' => 'Adicionar Produto',
     'produto_editar.php' => 'Editar Produto',
-    'categorias.php' => 'GestÃ£o de Categorias',
+    'categorias.php' => 'Gestão de Categorias',
     'categoria_adicionar.php' => 'Adicionar Categoria',
     'categoria_editar.php' => 'Editar Categoria',
-    'pedidos.php' => 'GestÃ£o de Pedidos',
-    'pedidos_melhorado.php' => 'GestÃ£o AvanÃ§ada de Pedidos',
+    'pedidos.php' => 'Gestão de Pedidos',
+    'pedidos_melhorado.php' => 'Gestão Avançada de Pedidos',
     'pedido_detalhes.php' => 'Detalhes do Pedido',
-    'cotacao.php' => 'GestÃ£o de CotaÃ§Ã£o',
-    'configuracoes.php' => 'ConfiguraÃ§Ãµes da Loja',
+    'cotacao.php' => 'Gestão de Cotação',
+    'configuracoes.php' => 'Configurações da Loja',
     'perfil.php' => 'Perfil do Administrador',
-    'popup_manager.php' => 'GestÃ£o de Pop-ups',
+    'popup_manager.php' => 'Gestão de Pop-ups',
     'barra_rotativa.php' => 'Barra Rotativa',
-    'gestao_quantidades_minimas.php' => 'GestÃ£o de Quantidades MÃ­nimas'
+    'gestao_quantidades_minimas.php' => 'Gestão de Quantidades Mínimas'
 ];
 
 if (isset($page_titles[$current_page])) {
     $page_title = $page_titles[$current_page];
 }
 
-// Se uma pÃ¡gina especÃ­fica definir $custom_page_title, usar esse
+// Se uma página específica definir $custom_page_title, usar esse
 if (isset($custom_page_title)) {
     $page_title = $custom_page_title;
 }
@@ -351,7 +351,7 @@ if (isset($custom_page_title)) {
             
             <!-- PRODUTOS -->
             <div class="nav-section">
-                <div class="nav-section-title">CatÃ¡logo</div>
+                <div class="nav-section-title">Catálogo</div>
                 <div class="nav-item">
                     <a href="produtos.php" class="nav-link <?php echo in_array($current_page, ['produtos.php', 'produto_adicionar.php', 'produto_editar.php']) ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-box"></i></span>
@@ -367,7 +367,7 @@ if (isset($custom_page_title)) {
                 <div class="nav-item">
                     <a href="gestao_quantidades_minimas.php" class="nav-link <?php echo $current_page === 'gestao_quantidades_minimas.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-sort-numeric-up"></i></span>
-                        <span class="nav-text">Quantidades MÃ­nimas</span>
+                        <span class="nav-text">Quantidades Mínimas</span>
                     </a>
                 </div>
             </div>
@@ -378,13 +378,13 @@ if (isset($custom_page_title)) {
                 <div class="nav-item">
                     <a href="pedidos.php" class="nav-link <?php echo $current_page === 'pedidos.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-shopping-cart"></i></span>
-                        <span class="nav-text">GestÃ£o de Pedidos</span>
+                        <span class="nav-text">Gestão de Pedidos</span>
                     </a>
                 </div>
                 <div class="nav-item">
                     <a href="cotacao.php" class="nav-link <?php echo $current_page === 'cotacao.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-exchange-alt"></i></span>
-                        <span class="nav-text">CotaÃ§Ã£o Cambial</span>
+                        <span class="nav-text">Cotação Cambial</span>
                     </a>
                 </div>
             </div>
@@ -395,7 +395,7 @@ if (isset($custom_page_title)) {
                 <div class="nav-item">
                     <a href="popup_manager.php" class="nav-link <?php echo $current_page === 'popup_manager.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-bullhorn"></i></span>
-                        <span class="nav-text">Pop-ups & PromoÃ§Ãµes</span>
+                        <span class="nav-text">Pop-ups & Promoções</span>
                     </a>
                 </div>
                 <div class="nav-item">
@@ -418,7 +418,7 @@ if (isset($custom_page_title)) {
                 <div class="nav-item">
                     <a href="configuracoes.php" class="nav-link <?php echo $current_page === 'configuracoes.php' ? 'active' : ''; ?>">
                         <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                        <span class="nav-text">ConfiguraÃ§Ãµes</span>
+                        <span class="nav-text">Configurações</span>
                     </a>
                 </div>
                 <div class="nav-item">
@@ -454,7 +454,7 @@ if (isset($custom_page_title)) {
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()" title="Atualizar pÃ¡gina">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()" title="Atualizar página">
                         <i class="fas fa-sync-alt"></i>
                     </button>
                     <a href="../index.php" class="btn btn-outline-primary btn-sm" target="_blank" title="Ver loja">

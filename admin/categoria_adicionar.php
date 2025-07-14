@@ -25,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = trim($_POST['description']);
     $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
     $status = isset($_POST['status']) ? 1 : 0;
+    $display_type = $_POST['display_type'] ?? 'icon';
+    $icon_name = trim($_POST['icon_name']) ?? 'fa-tags';
+    $title_display = trim($_POST['title_display']) ?? '';
     
     // Validações
     if (empty($name)) {
@@ -96,15 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Preparar query adequada baseada no parent_id
         if ($parent_id === null) {
-            $query = "INSERT INTO categories (name, description, image_url, parent_id, status, created_at, updated_at) 
-                     VALUES (?, ?, ?, NULL, ?, NOW(), NOW())";
+            $query = "INSERT INTO categories (name, description, image_url, display_type, icon_name, title_display, parent_id, status, created_at, updated_at) 
+                     VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NOW(), NOW())";
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("sssi", $name, $description, $image_url, $status);
+            $stmt->bind_param("ssssssi", $name, $description, $image_url, $display_type, $icon_name, $title_display, $status);
         } else {
-            $query = "INSERT INTO categories (name, description, image_url, parent_id, status, created_at, updated_at) 
-                     VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
+            $query = "INSERT INTO categories (name, description, image_url, display_type, icon_name, title_display, parent_id, status, created_at, updated_at) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
             $stmt = $conn->prepare($query);
-            $stmt->bind_param("sssii", $name, $description, $image_url, $parent_id, $status);
+            $stmt->bind_param("ssssssii", $name, $description, $image_url, $display_type, $icon_name, $title_display, $parent_id, $status);
         }
         
         if ($stmt->execute()) {
@@ -185,6 +188,80 @@ include 'includes/admin_layout.php';
                     </div>
                     
                     <div class="mb-3">
+                        <label for="title_display" class="form-label">Título Personalizado</label>
+                        <input type="text" class="form-control" id="title_display" name="title_display" value="<?php echo htmlspecialchars($title_display); ?>" placeholder="Deixe em branco para usar o nome da categoria">
+                        <div class="form-text">
+                            Título que aparecerá nas categorias. Se deixar em branco, usará o nome da categoria.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Exibição <span class="text-danger">*</span></label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="display_type" id="display_type_icon" value="icon" <?php echo ($display_type ?? 'icon') == 'icon' ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="display_type_icon">
+                                        <i class="fas fa-icons me-2"></i> Usar Ícone
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="display_type" id="display_type_image" value="image" <?php echo ($display_type ?? 'icon') == 'image' ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="display_type_image">
+                                        <i class="fas fa-image me-2"></i> Usar Imagem
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3" id="icon_selection" style="display: <?php echo ($display_type ?? 'icon') == 'icon' ? 'block' : 'none'; ?>">
+                        <label for="icon_name" class="form-label">Ícone da Categoria</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas <?php echo $icon_name ?? 'fa-tags'; ?>" id="icon_preview"></i>
+                            </span>
+                            <input type="text" class="form-control" id="icon_name" name="icon_name" value="<?php echo htmlspecialchars($icon_name ?? 'fa-tags'); ?>" placeholder="fa-tags">
+                        </div>
+                        <div class="form-text">
+                            Use classes do Font Awesome 6 (ex: fa-apple-whole, fa-carrot, fa-leaf)
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="icon-suggestions">
+                                    <strong>Sugestões populares:</strong><br>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-apple-whole">
+                                        <i class="fas fa-apple-whole"></i> Frutas
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-carrot">
+                                        <i class="fas fa-carrot"></i> Vegetais
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-drumstick-bite">
+                                        <i class="fas fa-drumstick-bite"></i> Carnes
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-glass-water">
+                                        <i class="fas fa-glass-water"></i> Bebidas
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-wheat-awn">
+                                        <i class="fas fa-wheat-awn"></i> Cereais
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-spray-can">
+                                        <i class="fas fa-spray-can"></i> Limpeza
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-pump-soap">
+                                        <i class="fas fa-pump-soap"></i> Higiene
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1 icon-suggestion" data-icon="fa-candy">
+                                        <i class="fas fa-candy"></i> Doces
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3" id="image_selection" style="display: <?php echo ($display_type ?? 'icon') == 'image' ? 'block' : 'none'; ?>">
                         <label for="image" class="form-label">Imagem da Categoria</label>
                         <div class="mb-2">
                             <div class="image-preview" id="imagePreview">
@@ -200,7 +277,7 @@ include 'includes/admin_layout.php';
                         <?php endif; ?>
                         
                         <div class="form-text">
-                            Tamanho máximo: 2MB. Formatos: JPG, PNG, GIF
+                            Tamanho máximo: 2MB. Formatos: JPG, PNG, GIF. A imagem será redimensionada automaticamente.
                         </div>
                     </div>
                     
@@ -244,6 +321,43 @@ include 'includes/admin_layout.php';
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Controle de exibição entre ícone e imagem
+        const displayTypeIcon = document.getElementById('display_type_icon');
+        const displayTypeImage = document.getElementById('display_type_image');
+        const iconSelection = document.getElementById('icon_selection');
+        const imageSelection = document.getElementById('image_selection');
+        
+        function toggleDisplayType() {
+            if (displayTypeIcon.checked) {
+                iconSelection.style.display = 'block';
+                imageSelection.style.display = 'none';
+            } else {
+                iconSelection.style.display = 'none';
+                imageSelection.style.display = 'block';
+            }
+        }
+        
+        displayTypeIcon.addEventListener('change', toggleDisplayType);
+        displayTypeImage.addEventListener('change', toggleDisplayType);
+        
+        // Preview de ícone
+        const iconInput = document.getElementById('icon_name');
+        const iconPreview = document.getElementById('icon_preview');
+        
+        iconInput.addEventListener('input', function() {
+            iconPreview.className = 'fas ' + this.value;
+        });
+        
+        // Sugestões de ícones
+        const iconSuggestions = document.querySelectorAll('.icon-suggestion');
+        iconSuggestions.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const icon = this.dataset.icon;
+                iconInput.value = icon;
+                iconPreview.className = 'fas ' + icon;
+            });
+        });
+        
         // Preview de imagem
         const imageInput = document.getElementById('image');
         const imagePreview = document.getElementById('imagePreviewImg');

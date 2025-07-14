@@ -345,8 +345,8 @@ $total_pyg = $subtotal_pyg + $shipping_pyg;
             </div>
 
             <div class="checkout-section">
-                <h2><i class="fas fa-pencil-alt text-primary me-2"></i>Observaciones</h2>
-                <textarea class="form-control" id="customer_notes" name="customer_notes" rows="3" placeholder="Información adicional para el vendedor (opcional)"><?php echo htmlspecialchars($customer_notes); ?></textarea>
+                                    <h2><i class="fas fa-pencil-alt text-primary me-2"></i>Observaciones</h2>
+                                    <textarea class="form-control" id="customer_notes" name="customer_notes" rows="3" placeholder="Información adicional para el vendedor (opcional)"><?php echo htmlspecialchars($customer_notes); ?></textarea>
             </div>
 
             <div class="summary-footer">

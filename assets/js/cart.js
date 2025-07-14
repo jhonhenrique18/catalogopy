@@ -51,37 +51,58 @@ function setupCartEvents() {
 
 /**
  * Configura os botões de quantidade (+ e -)
+ * Otimizado para o novo design moderno com feedback visual
  */
 function setupQuantityButtons() {
     // Botões de diminuir
-    document.querySelectorAll('.btn-qty-minus:not([data-cart-initialized])').forEach(button => {
+    document.querySelectorAll('.btn-qty-minus:not([data-cart-initialized]), .quantity-btn.btn-qty-minus:not([data-cart-initialized])').forEach(button => {
         button.setAttribute('data-cart-initialized', 'true');
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.getAttribute('data-product-id');
-            const input = document.querySelector(`.product-quantity[data-product-id="${productId}"]`);
+            const input = document.querySelector(`.product-quantity[data-product-id="${productId}"], .quantity-input[data-product-id="${productId}"]`);
+            
+            // Feedback visual
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
             
             if (input) {
                 let value = parseInt(input.value) || 1;
                 const minValue = parseInt(input.getAttribute('min')) || 1;
                 if (value > minValue) {
                     input.value = value - 1;
+                    // Animação sutil no input
+                    input.style.animation = 'none';
+                    input.offsetHeight; // Força reflow
+                    input.style.animation = 'pulse 0.3s ease';
                 }
             }
         });
     });
     
     // Botões de aumentar
-    document.querySelectorAll('.btn-qty-plus:not([data-cart-initialized])').forEach(button => {
+    document.querySelectorAll('.btn-qty-plus:not([data-cart-initialized]), .quantity-btn.btn-qty-plus:not([data-cart-initialized])').forEach(button => {
         button.setAttribute('data-cart-initialized', 'true');
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const productId = this.getAttribute('data-product-id');
-            const input = document.querySelector(`.product-quantity[data-product-id="${productId}"]`);
+            const input = document.querySelector(`.product-quantity[data-product-id="${productId}"], .quantity-input[data-product-id="${productId}"]`);
+            
+            // Feedback visual
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
             
             if (input) {
                 let value = parseInt(input.value) || 1;
                 input.value = value + 1;
+                // Animação sutil no input
+                input.style.animation = 'none';
+                input.offsetHeight; // Força reflow
+                input.style.animation = 'pulse 0.3s ease';
             }
         });
     });
@@ -89,6 +110,7 @@ function setupQuantityButtons() {
 
 /**
  * Configura os botões de adicionar ao carrinho
+ * Otimizado para o novo design moderno
  */
 function setupAddToCartButtons() {
     // Todos os botões com data-product-id (produtos com e sem preço)
@@ -110,6 +132,12 @@ function setupAddToCartButtons() {
             console.log('Clique no botão adicionar:', { productId, quantity });
             
             if (productId && quantity > 0) {
+                // Adicionar feedback visual moderno
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
                 addToCart(productId, quantity);
                 
                 // Não resetar quantidade após adicionar ao carrinho
@@ -660,46 +688,109 @@ function formatNumber(number, decimals = 0) {
 }
 
 /**
- * Mostra notificação
+ * Mostra notificação moderna com design atualizado
  */
 function showNotification(message, type = 'success') {
     console.log('Notificação:', message, type);
     
-    // Criar elemento de notificação se não existir
+    // Tentar usar o toast do Bootstrap primeiro
+    const toast = document.getElementById('toast-notification');
+    if (toast) {
+        const toastBody = toast.querySelector('.toast-body');
+        
+        if (toastBody) {
+            // Configurar ícone baseado no tipo
+            let icon = 'fas fa-check-circle';
+            if (type === 'error') {
+                icon = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon = 'fas fa-info-circle';
+            }
+            
+            toastBody.innerHTML = `<i class="${icon} me-2"></i>${message}`;
+            
+            // Configurar cor baseada no tipo com gradientes modernos
+            const toastElement = new bootstrap.Toast(toast, {
+                autohide: true,
+                delay: 3000
+            });
+            
+            // Aplicar estilos modernos baseados no tipo
+            toast.style.background = '';
+            toast.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'bg-info');
+            
+            if (type === 'error') {
+                toast.style.background = 'linear-gradient(135deg, #FF4444, #E53935)';
+            } else if (type === 'warning') {
+                toast.style.background = 'linear-gradient(135deg, #FF8800, #F57F17)';
+            } else if (type === 'info') {
+                toast.style.background = 'linear-gradient(135deg, #33B5E5, #1976D2)';
+            } else {
+                toast.style.background = 'linear-gradient(135deg, #00C851, #00A441)';
+            }
+            
+            toastElement.show();
+            return;
+        }
+    }
+    
+    // Fallback: Criar elemento de notificação moderno
     let notification = document.getElementById('cart-notification');
     if (!notification) {
         notification = document.createElement('div');
         notification.id = 'cart-notification';
         notification.style.cssText = `
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
             z-index: 9999;
-            padding: 15px 20px;
-            border-radius: 5px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
             color: white;
-            font-weight: bold;
-            min-width: 200px;
+            font-weight: 600;
+            min-width: 280px;
+            max-width: 90vw;
             text-align: center;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            background-color: ${type === 'success' ? '#27AE60' : '#E74C3C'};
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         `;
         document.body.appendChild(notification);
     }
     
-    // Atualizar cor baseado no tipo
-    notification.style.backgroundColor = type === 'success' ? '#27AE60' : '#E74C3C';
-    notification.textContent = message;
+    // Configurar ícone e cor baseado no tipo
+    let icon = 'fas fa-check-circle';
+    let backgroundColor = 'linear-gradient(135deg, #00C851, #00A441)';
     
-    // Mostrar notificação
+    if (type === 'error') {
+        icon = 'fas fa-exclamation-circle';
+        backgroundColor = 'linear-gradient(135deg, #FF4444, #E53935)';
+    } else if (type === 'warning') {
+        icon = 'fas fa-exclamation-triangle';
+        backgroundColor = 'linear-gradient(135deg, #FF8800, #F57F17)';
+    } else if (type === 'info') {
+        icon = 'fas fa-info-circle';
+        backgroundColor = 'linear-gradient(135deg, #33B5E5, #1976D2)';
+    }
+    
+    notification.style.background = backgroundColor;
+    notification.innerHTML = `<i class="${icon}" style="margin-right: 0.5rem;"></i>${message}`;
+    
+    // Mostrar notificação com animação suave
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
     
     // Esconder após 3 segundos
     setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(-50%) translateY(-20px)';
     }, 3000);
 }
 
